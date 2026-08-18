@@ -26,7 +26,7 @@
 
 ### 2.2. Nhận định sau khi nhóm ngồi lại với nhau
 
-* **Hành vi lặp lại rõ nhất:** Người học mở slide ra nhưng bị tắc ngay tại các đoạn công thức hoặc khái niệm cô đọng, không có bước đệm và ví dụ cụ thể $\rightarrow$ dẫn đến việc đọc đi đọc lại nhiều lần trong vô vọng.
+* **Hành vi lặp lại rõ nhất:** Người học mở slide ra nhưng bị tắc ngay tại các đoạn công thức hoặc khái niệm cô đọng, không có bước đệm và ví dụ cụ thể -> dẫn đến việc đọc đi đọc lại nhiều lần trong vô vọng.
 * **Điểm nghẽn cốt lõi:** 
   * Slide bài giảng thường được thiết kế để giảng viên trình chiếu trên lớp nên rất nhiều gạch đầu dòng vắn tắt, lược bỏ các bước suy luận trung gian.
   * Khi sinh viên tự học hoặc xem lại để làm bài tập, việc thiếu ví dụ số liệu cụ thể và thiếu diễn giải bước đệm khiến họ không thể tự hiểu bản chất và không biết mình đang bị hổng ở bước nào.
@@ -36,11 +36,11 @@
 > **Khi học bài, học viên gặp khó khăn vì slide bài giảng quá dài nhưng chỉ toàn gạch đầu dòng cô đọng, thiếu ví dụ minh họa và thiếu diễn giải bước đệm, dẫn đến đọc đi đọc lại nhiều lần vẫn không hiểu mình bị hổng ở bước nào.**
 
 * **3 bằng chứng thực tế giữ vững giả thuyết:**
-  1. *Hiếu* không thể làm bài tập vì slide chỉ có công thức trừu tượng, hoàn toàn thiếu bài mẫu tính toán số liệu từng bước.
-  2. *Hải* bị đứt mạch tư duy và hỏng cả bài thực hành vì slide nhảy cóc một bước biến đổi công thức mà không có diễn giải đệm.
-  3. *Đăng* đọc đi đọc lại 3 lần vẫn mông lung vì slide toàn gạch đầu dòng cô đọng, không biết mình đang hổng ở khái niệm nào.
+  1. Hiếu không thể làm bài tập vì slide chỉ có công thức trừu tượng, hoàn toàn thiếu bài mẫu tính toán số liệu từng bước.
+  2. Hải bị đứt mạch tư duy và hỏng cả bài thực hành vì slide nhảy cóc một bước biến đổi công thức mà không có diễn giải đệm.
+  3. Đăng đọc đi đọc lại 3 lần vẫn mông lung vì slide toàn gạch đầu dòng cô đọng, không biết mình đang hổng ở khái niệm nào.
 
-* **2 điều nhóm chưa dám khẳng định (Still Unproven):**
+* **2 điều nhóm chưa dám khẳng định:**
   1. Nếu hệ thống tự động bóc tách và cung cấp diễn giải bước đệm hoặc ví dụ minh họa ngay cạnh slide, liệu người học có tự hiểu bài ngay mà không cần sự can thiệp của giảng viên/trợ giảng?
   2. Người học cần AI hỗ trợ chẩn đoán xem họ đang hổng ở bước nào, hay họ chỉ cần một khu vực mở rộng hiển thị sẵn ví dụ mẫu và diễn giải chi tiết?
 
