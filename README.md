@@ -50,9 +50,9 @@
 
 - **Option A (Cá nhân hóa chủ động):** Học viên chủ động bôi đen đoạn công thức chưa hiểu. AI sẽ hiển thị pop-up giải thích chi tiết bước đệm kèm theo ví dụ số liệu cụ thể cho riêng đoạn đó.
 - **Option B (Dựa trên dữ liệu lớp học):** Sử dụng thắc mắc của lớp học để gợi ý. Học viên bấm vào các vùng highlight "Nhiều bạn cũng kẹt ở đây" để xem câu hỏi của các bạn khác và lời giải chung từ hệ thống.
-- **Option C (Kéo thả điền khuyết):** Chuyển đổi công thức thành bài tập điền khuyết. Học viên kéo thả các số liệu từ bài mẫu vào chỗ trống để tự thực hành và hiểu được logic của bước nhảy cóc.
-* **Link Prototype chung:** [prototype-link.md](file:///d:/AIThucchien/Track1-Day18-TeamHoang/prototype-link.md)
-* **Bảng so sánh cơ chế:** [three-option-design-sheet.md](file:///d:/AIThucchien/Track1-Day18-TeamHoang/three-option-design-sheet.md)
+- **Option C (Gia sư dẫn dắt):** Hệ thống đóng vai trò hướng dẫn. Thay vì đưa ngay lời giải, AI chia nhỏ bài toán thành các câu hỏi phụ để học viên tự suy luận từng bước cho đến khi hiểu logic.
+* **Link Prototype chung:** [prototype-link.md](./prototype-link.md)
+* **Bảng so sánh cơ chế:** [three-option-design-sheet.md](./three-option-design-sheet.md)
 
 ---
 
