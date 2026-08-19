@@ -5,10 +5,14 @@
 ## 1. Thông tin cá nhân và nhóm
 
 * **Nhóm:** Team Hoang
-* **Thành viên:**
-  * Nguyễn Đức Đạt - 2A202601728
-  * Kiều Hồng Phong - 2A202601020
-  * Đỗ Duy Đức - 2A202602019
+* **Thành viên & Phân chia công việc:**
+
+| Họ và tên | Mã học viên | Vai trò & Công việc đảm nhận |
+| :--- | :--- | :--- |
+| **Nguyễn Đức Đạt** | 2A202601728 | Phụ trách phát triển logic cốt lõi. Lên ý tưởng và lập trình luồng tương tác cho Option C (Socratic Quiz), xây dựng thuật toán kích hoạt bài kiểm tra chẩn đoán và chuẩn bị dữ liệu mồi cho Option B. |
+| **Kiều Hồng Phong** | 2A202601020 | Đảm nhiệm phần thiết kế giao diện (UI/CSS bằng Tailwind). Xây dựng cơ chế tương tác bôi đen (Option A), biểu đồ nhiệt (Option B) và lập trình tính năng "Bỏ qua" cho Option C. |
+| **Đỗ Duy Đức** | 2A202602019 | Phụ trách mảng nghiên cứu người dùng. Thực hiện phỏng vấn, thu thập dữ liệu thô, phân tích chuyên sâu (soạn thảo Feedback Note, Synthesis) và chuẩn bị kịch bản thuyết trình. |
+| **Công việc chung (Cả 3 thành viên)** | Chung | - **Chặng 1:** Thảo luận, tổng hợp Evidence và thống nhất Hypothesis Problem.<br>- **Chặng 2:** Phân tích các giải pháp và chốt 3 phương án thiết kế (A, B, C).<br>- **Chặng 3:** Xây dựng bảng Human-AI Decision Table.<br>- **Chặng 6:** Đồng phân tích dữ liệu kiểm thử để định hướng Next Change. |
 * **Case nghiên cứu:** Case A - AI Tutor: Diagnostic Refresher
 * **Người thực hiện:** *(Điền họ tên & MHV cá nhân)*
 
@@ -54,15 +58,20 @@
 * **Link Prototype chung:** [prototype-link.md](./prototype-link.md)
 * **Bảng so sánh cơ chế:** [three-option-design-sheet.md](./three-option-design-sheet.md)
 
-## 5. Prototype Feedback & Group Synthesis
-*(Sẽ cập nhật sau khi hoàn thành test 3 người ở Chặng 5 & 6)*
+## 4. Đóng góp của tôi trong nhóm
+*(Điền chi tiết phần việc bạn đã đảm nhiệm: VD: Thiết kế giao diện Option B, phỏng vấn Tester 2, tổng hợp Feedback Note... Tham khảo bảng phân công ở Mục 1)*
 
-* **Ghi chép phiên test cá nhân:** [prototype-feedback-note.md](file:///d:/AIThucchien/Track1-Day18-TeamHoang/prototype-feedback-note.md)
-* **Tổng hợp ý kiến 3 tester:** [group-feedback-synthesis.md](file:///d:/AIThucchien/Track1-Day18-TeamHoang/group-feedback-synthesis.md)
-* **Next Change của nhóm:** ...
-* **Điều vẫn chưa chứng minh được sau buổi test:** ...
+---
+
+## 5. Prototype Feedback & Group Synthesis
+*(Đã hoàn thành test với 4 user ở Chặng 5 & 6)*
+
+* **Ghi chép phiên test cá nhân:** [prototype-feedback-note.md](./prototype-feedback-note.md)
+* **Tổng hợp ý kiến 4 tester:** [group-feedback-synthesis.md](./group-feedback-synthesis.md)
+* **Next Change của nhóm:** Sau test, **Option B được lựa chọn nhiều nhất** (do tâm lý lười đọc và thích sự an toàn của đám đông). Tuy nhiên, để giải quyết tận gốc Hypothesis Problem, nhóm quyết định **kết hợp Option A và Option C**. Mặc định cho hỏi nhanh (Option A), nhưng nếu hỏi lại quá nhiều kiến thức nền sẽ kích hoạt bài test chẩn đoán (Option C). Đặc biệt, **ẩn nút Bỏ qua (Skip)** ở Option C ban đầu, ép người học thử sức và sai ít nhất 1 lần thì mới cho phép xem đáp án để tránh tình trạng lạm dụng nút Skip lấy đáp án như trong buổi test.
+* **Điều vẫn chưa chứng minh được sau buổi test:** Việc ẩn nút Skip và ép ngắn câu trả lời của AI có khiến tệp user lười đọc (như Tuấn, Vy) cảm thấy khó chịu đến mức bỏ ứng dụng không, hay nó đủ để tạo "ma sát tích cực" giúp họ ghi nhớ sâu hơn? Cần thử nghiệm thêm về điểm cân bằng UX.
 
 ---
 
 ## 6. AI Support Log (Nhật ký dùng AI)
-*(Xem chi tiết tại [ai-support-log.md](file:///d:/AIThucchien/Track1-Day18-TeamHoang/ai-support-log.md))*
+*(Xem chi tiết tại [ai-support-log.md](./ai-support-log.md))*
