@@ -11,19 +11,24 @@ export type SlideData = {
   intro: string
   segments: Segment[]
   explanations: Record<string, { title: string; body: string; example: string }>
-  communityQuestions: {
-    id: string
-    author: string
-    avatarColor: string
-    time: string
-    upvotes: number
-    text: string
-  }[]
-  communityAiAnswer: {
-    summary: string
-    body: string
-    steps: string[]
-  }
+  community: Record<
+    string,
+    {
+      questions: {
+        id: string
+        author: string
+        avatarColor: string
+        time: string
+        upvotes: number
+        text: string
+      }[]
+      aiAnswer: {
+        summary: string
+        body: string
+        steps: string[]
+      }
+    }
+  >
   diagnosticQuiz: {
     prompt: string
     placeholder: string
@@ -100,41 +105,64 @@ export const slides: SlideData[] = [
           '$0{,}08 \\times 0{,}99 = 0{,}0792$ — lớn gấp gần 9 lần so với tử số $0{,}009$ của ca bệnh thật.',
       },
     },
-    communityQuestions: [
-      {
-        id: 'q1',
-        author: 'Minh Anh',
-        avatarColor: 'oklch(0.7 0.15 30)',
-        time: '2 ngày trước',
-        upvotes: 42,
-        text: 'Mình không hiểu tại sao 0,009 lại biến thành 0,102? Con số 0,102 ở đâu ra vậy ạ?',
+    community: {
+      s5: {
+        questions: [
+          {
+            id: 'q1',
+            author: 'Minh Anh',
+            avatarColor: 'oklch(0.7 0.15 30)',
+            time: '2 ngày trước',
+            upvotes: 42,
+            text: 'Mình không hiểu tại sao 0,009 lại biến thành 0,102? Con số 0,102 ở đâu ra vậy ạ?',
+          },
+          {
+            id: 'q2',
+            author: 'Đức Huy',
+            avatarColor: 'oklch(0.65 0.15 250)',
+            time: '4 ngày trước',
+            upvotes: 31,
+            text: 'Slide nhảy từ tử số thẳng sang kết quả cuối. Có phải còn một phép chia bị thiếu không?',
+          },
+          {
+            id: 'q3',
+            author: 'Thu Hà',
+            avatarColor: 'oklch(0.68 0.15 320)',
+            time: '1 tuần trước',
+            upvotes: 18,
+            text: 'Mẫu số P(Dương) tính thế nào khi đề bài chỉ cho xác suất có điều kiện?',
+          },
+        ],
+        aiAnswer: {
+          summary: 'Cả lớp đều bị vướng ở bước nhảy từ 0,009 sang 0,102 (chiếm 85% tổng số câu hỏi).',
+          body: 'Các bạn nhận xét rất đúng. Slide này đã ẩn đi một bước tính toán quan trọng: Tính mẫu số P(Dương) = 0,0882. Việc giấu mẫu số khiến công thức Bayes trông giống như "từ trên trời rơi xuống", làm đứt gãy mạch suy luận của người học.',
+          steps: [
+            'Hải Phong, Đức Huy: Đã phát hiện ra sự đứt gãy logic.',
+            'Thu Hà: Đặt câu hỏi đi thẳng vào cốt lõi vấn đề.',
+            'Bài học rút ra: Luôn đòi hỏi việc hiển thị rõ ràng mẫu số (Tổng xác suất) khi áp dụng định lý Bayes.',
+          ],
+        },
       },
-      {
-        id: 'q2',
-        author: 'Đức Huy',
-        avatarColor: 'oklch(0.65 0.15 250)',
-        time: '4 ngày trước',
-        upvotes: 31,
-        text: 'Slide nhảy từ tử số thẳng sang kết quả cuối. Có phải còn một phép chia bị thiếu không?',
+      s4: {
+        questions: [
+          {
+            id: 'q4',
+            author: 'Hải Phong',
+            avatarColor: 'oklch(0.6 0.2 150)',
+            time: '5 giờ trước',
+            upvotes: 21,
+            text: 'Dương tính ở đây có nghĩa là chắc chắn mắc bệnh 100% không?',
+          },
+        ],
+        aiAnswer: {
+          summary: 'Nhiều bạn thắc mắc về độ chắc chắn của kết quả dương tính.',
+          body: 'Kết quả dương tính từ xét nghiệm không bao giờ khẳng định 100% bạn mắc bệnh, vì luôn có tỷ lệ dương tính giả (False Positive) từ máy móc.',
+          steps: [
+            'Dương tính chỉ là một "bằng chứng" (evidence).',
+            'Ta phải kết hợp với xác suất ban đầu (prior) để ra kết luận.',
+          ],
+        },
       },
-      {
-        id: 'q3',
-        author: 'Thu Hà',
-        avatarColor: 'oklch(0.68 0.15 320)',
-        time: '1 tuần trước',
-        upvotes: 18,
-        text: 'Mẫu số P(Dương) tính thế nào khi đề bài chỉ cho xác suất có điều kiện?',
-      },
-    ],
-    communityAiAnswer: {
-      summary:
-        'Đa số thắc mắc tập trung vào bước chuẩn hoá bị lược bỏ giữa tử số 0,009 và kết quả 0,102.',
-      body: 'Slide đã bỏ qua việc tính mẫu số P(Dương) — tổng xác suất cho ra kết quả dương tính từ CẢ người bệnh lẫn người khoẻ. Đây là bước "chuẩn hoá" biến xác suất kết hợp thành xác suất hậu nghiệm.',
-      steps: [
-        'Tử số $= P(\\text{Dương} \\mid \\text{Bệnh}) \\cdot P(\\text{Bệnh}) = 0{,}9 \\times 0{,}01 = 0{,}009$',
-        'Mẫu số $= 0{,}009 + (0{,}08 \\times 0{,}99) = 0{,}009 + 0{,}0792 = 0{,}0882$',
-        'Hậu nghiệm $= \\dfrac{0{,}009}{0{,}0882} \\approx 0{,}102$ (khoảng 10%)',
-      ],
     },
     diagnosticQuiz: {
       prompt:
@@ -235,33 +263,47 @@ export const slides: SlideData[] = [
         example: 'Qua 10 lớp với $x > 0$: Gradient tỷ lệ $1^{10} = 1$.',
       },
     },
-    communityQuestions: [
-      {
-        id: 'q1',
-        author: 'Tuấn Anh',
-        avatarColor: 'oklch(0.6 0.15 150)',
-        time: '3 ngày trước',
-        upvotes: 28,
-        text: 'Tại sao nhân nhiều số nhỏ lại là vấn đề? Máy tính vẫn tính được số thập phân siêu nhỏ mà?',
+    community: {
+      n4: {
+        questions: [
+          {
+            id: 'q1',
+            author: 'Gia Linh',
+            avatarColor: 'oklch(0.6 0.2 150)',
+            time: '3 ngày trước',
+            upvotes: 56,
+            text: 'Tại sao lại là $0.25^5$ vậy mọi người? Mỗi lớp đều có Sigmoid à?',
+          },
+        ],
+        aiAnswer: {
+          summary: 'Nhiều bạn chưa hiểu tại sao lại lấy 0.25 mũ 5.',
+          body: 'Đúng vậy! Trong một mạng Neural sâu 5 lớp dùng Sigmoid, gradient phải truyền ngược qua cả 5 lớp. Mỗi lần đi qua một lớp, nó bị nhân với đạo hàm tối đa là 0.25. Do quy tắc chuỗi (Chain Rule), ta phải nhân 5 lần.',
+          steps: [
+            'Mỗi lớp ẩn đóng góp 1 đạo hàm cục bộ.',
+            'Lan truyền ngược (Backprop) nhân tất cả lại.',
+          ],
+        },
       },
-      {
-        id: 'q2',
-        author: 'Linh Chi',
-        avatarColor: 'oklch(0.65 0.15 280)',
-        time: '1 tuần trước',
-        upvotes: 15,
-        text: 'Cho mình hỏi nếu $x < 0$ thì đạo hàm ReLU bằng 0, vậy trọng số có bị "chết" luôn không?',
+      n6: {
+        questions: [
+          {
+            id: 'q2',
+            author: 'Hải Đăng',
+            avatarColor: 'oklch(0.65 0.15 250)',
+            time: '1 tuần trước',
+            upvotes: 38,
+            text: 'Nếu đạo hàm ReLU bằng 1 thì nhân 5 lần cũng bằng 1. Vậy nó truyền nguyên vẹn luôn?',
+          },
+        ],
+        aiAnswer: {
+          summary: 'Sự khác biệt khi thay Sigmoid bằng ReLU.',
+          body: 'Chính xác! Khi đầu vào dương, đạo hàm ReLU luôn là 1. 1 nhân 1 nhân 1... bằng 1. Tín hiệu lỗi được bảo toàn nguyên vẹn đến tận lớp đầu tiên. Đó là lý do ReLU giải quyết được vấn đề vanishing gradient.',
+          steps: [
+            'Sigmoid: Nhỏ dần qua từng lớp (teo tóp).',
+            'ReLU: Bảo toàn nguyên vẹn.',
+          ],
+        },
       },
-    ],
-    communityAiAnswer: {
-      summary:
-        'Nhiều bạn thắc mắc về tác động thực tế của việc nhân đạo hàm nhỏ, và lo ngại hiện tượng "Dead ReLU" khi $x \\le 0$.',
-      body: 'Việc gradient quá nhỏ không làm máy tính lỗi, nhưng làm các trọng số ở những lớp đầu tiên gần như không được cập nhật do tốc độ học quá chậm. Khi đó mô hình không hội tụ được. Về vấn đề của ReLU, nhánh âm ($x \\le 0$) thực sự tạo ra rủi ro "Dead ReLU" như Linh Chi nhắc tới.',
-      steps: [
-        'Khi $x > 0$: $\\dfrac{\\partial f}{\\partial x} = 1$ (Gradient truyền nguyên vẹn)',
-        'Khi $x < 0$: $\\dfrac{\\partial f}{\\partial x} = 0$ (Gradient bằng 0, trọng số không học nữa)',
-        'Giải pháp nâng cao: Sử dụng Leaky ReLU $f(x) = \\max(0{,}01x, x)$ để giữ lại một gradient nhỏ.',
-      ],
     },
     diagnosticQuiz: {
       prompt:
@@ -304,6 +346,200 @@ export const slides: SlideData[] = [
       }
     },
   },
+  {
+    id: 'gd',
+    tag: 'Tối ưu hoá',
+    title: 'Gradient Descent: Tìm kiếm điểm cực tiểu',
+    intro: 'Gradient Descent là thuật toán tối ưu hoá cốt lõi dùng để tìm bộ trọng số giúp giảm thiểu hàm mất mát (loss function).',
+    segments: [
+      { id: 'g1', text: 'Hàm mất mát $L(w)$ đo lường sự chênh lệch giữa dự đoán và thực tế.', heat: 0 },
+      { id: 'g2', text: 'Mục tiêu là tìm $w$ sao cho $L(w)$ đạt cực tiểu.', heat: 0 },
+      { id: 'g3', text: 'Thuật toán bắt đầu với $w$ ngẫu nhiên và tính đạo hàm $\\nabla L(w)$.', heat: 1 },
+      { id: 'g4', text: 'Sau đó, nó cập nhật: $w = w - \\eta \\nabla L(w)$, với $\\eta$ là learning rate.', heat: 3 },
+      { id: 'g5', text: 'Nếu $\\eta$ quá lớn, mô hình có thể không bao giờ hội tụ được và liên tục nhảy vọt qua điểm cực tiểu.', heat: 2 }
+    ],
+    explanations: {
+      g4: {
+        title: 'Tại sao lại trừ đi đạo hàm?',
+        body: 'Đạo hàm chỉ hướng dốc lên mạnh nhất của hàm số. Để tìm điểm thấp nhất (cực tiểu), ta phải đi theo hướng ngược lại, do đó ta TRỪ đi đạo hàm.',
+        example: 'Nếu đạo hàm là dương (đang dốc lên về bên phải), ta trừ đi một số dương để $w$ giảm (đi sang trái, về phía thung lũng).'
+      },
+      g5: {
+        title: 'Learning rate quá lớn gây hậu quả gì?',
+        body: '$\\eta$ quyết định kích thước bước chân. Nếu quá lớn, bước chân sẽ băng qua luôn điểm thấp nhất sang bờ bên kia của thung lũng, dẫn đến phân kỳ (loss tăng dần).',
+        example: 'Thử tưởng tượng bạn đang xuống núi nhưng mỗi bước lại dài 1 km, bạn sẽ vô tình nhảy sang ngọn núi bên kia.'
+      }
+    },
+    community: {
+      g4: {
+        questions: [
+          {
+            id: 'q1',
+            author: 'Bảo Trâm',
+            avatarColor: 'oklch(0.6 0.15 40)',
+            time: '1 ngày trước',
+            upvotes: 45,
+            text: 'Dấu trừ trong công thức cập nhật có ý nghĩa vật lý như thế nào?',
+          }
+        ],
+        aiAnswer: {
+          summary: 'Nhiều bạn thắc mắc vì sao công thức lại dùng dấu trừ chứ không phải dấu cộng.',
+          body: 'Đạo hàm (gradient) cho biết hướng dốc lên. Vì chúng ta muốn tìm điểm cực tiểu (thung lũng), ta phải đi ngược hướng dốc lên, tức là đi dốc xuống. Đó là lý do ta trừ đi gradient.',
+          steps: ['Gradient = Hướng dốc lên mạnh nhất', 'Mục tiêu = Cực tiểu (thấp nhất)', 'Đi ngược gradient = Trừ đi gradient']
+        }
+      },
+      g5: {
+        questions: [
+          {
+            id: 'q2',
+            author: 'Nhật Nam',
+            avatarColor: 'oklch(0.5 0.2 120)',
+            time: '2 ngày trước',
+            upvotes: 30,
+            text: 'Làm sao để biết learning rate của mình là quá lớn hay quá nhỏ?',
+          }
+        ],
+        aiAnswer: {
+          summary: 'Câu hỏi về cách chọn learning rate phù hợp.',
+          body: 'Nếu loss giảm rất chậm, learning rate quá nhỏ. Nếu loss tăng vọt hoặc dao động mạnh, learning rate quá lớn. Thường ta bắt đầu với $0.1$ hoặc $0.01$ và dùng Learning Rate Scheduler để giảm dần.',
+          steps: ['Loss giảm chậm: $\\eta$ quá nhỏ', 'Loss nhảy loạn xạ: $\\eta$ quá lớn', 'Kỹ thuật: Dùng scheduler giảm dần $\\eta$']
+        }
+      }
+    },
+    diagnosticQuiz: {
+      prompt: 'Nếu đạo hàm $\\nabla L(w)$ đang có giá trị DƯƠNG, thì theo công thức Gradient Descent, trọng số $w$ sẽ tăng hay giảm?',
+      placeholder: 'Nhập "tăng" hoặc "giảm"',
+      correctAnswers: ['giảm', 'giam'],
+      socratic: [
+        {
+          id: 'h1',
+          question: 'Công thức cập nhật của Gradient Descent là gì?',
+          options: [
+            { id: 'a', label: '$w = w + \\eta \\nabla L(w)$', correct: false, gap: 'Nhớ sai công thức: Gradient Descent dùng dấu trừ' },
+            { id: 'b', label: '$w = w - \\eta \\nabla L(w)$', correct: true }
+          ]
+        },
+        {
+          id: 'h2',
+          question: 'Trong biểu thức $-\\eta \\nabla L(w)$, vì $\\eta$ luôn dương, nếu đạo hàm dương thì cụm này sẽ dương hay âm?',
+          options: [
+            { id: 'a', label: 'Âm', correct: true },
+            { id: 'b', label: 'Dương', correct: false, gap: 'Sai quy tắc dấu: âm nhân dương ra âm' }
+          ]
+        },
+        {
+          id: 'h3',
+          question: 'Vậy khi cộng một số âm vào $w$, giá trị của $w$ sẽ thay đổi thế nào?',
+          options: [
+            { id: 'a', label: 'Tăng lên', correct: false, gap: 'Sai toán học cơ bản' },
+            { id: 'b', label: 'Giảm đi', correct: true }
+          ]
+        }
+      ],
+      fullAnswer: 'Vì công thức là $w_{mới} = w - \\eta \\nabla L(w)$. Nếu đạo hàm là dương, ta đang trừ đi một lượng dương (vì $\\eta$ cũng dương), do đó $w$ sẽ giảm đi.',
+      gapAnalysis: {
+        gap: 'Bạn bị nhầm lẫn về dấu trong công thức cập nhật của Gradient Descent.',
+        improvement: 'Nhớ kỹ từ "Descent" có nghĩa là "Đi xuống". Để đi xuống, ta luôn đi ngược hướng với Gradient (hướng đi lên). Gradient dương $\\to$ đi ngược lại $\\to$ giá trị biến phải giảm.'
+      }
+    }
+  },
+  {
+    id: 'overfitting',
+    tag: 'Machine Learning Cơ bản',
+    title: 'Hiện tượng Overfitting và Kỹ thuật Dropout',
+    intro: 'Khi mô hình học quá mức, nó ghi nhớ cả nhiễu thay vì học quy luật chung. Dropout là một kỹ thuật mạnh mẽ để chống lại điều này.',
+    segments: [
+      { id: 'o1', text: 'Overfitting xảy ra khi mô hình quá phức tạp, có loss trên tập train rất thấp nhưng loss trên tập test lại cao.', heat: 0 },
+      { id: 'o2', text: 'Khi đó, mô hình ghi nhớ (memorize) từng điểm dữ liệu học thay vì tổng quát hoá (generalize).', heat: 1 },
+      { id: 'o3', text: 'Dropout là một kỹ thuật Regularization. Trong quá trình training, nó tắt ngẫu nhiên một tỷ lệ $p$ các nơ-ron.', heat: 3 },
+      { id: 'o4', text: 'Việc này buộc mạng không được phụ thuộc quá nhiều vào bất kỳ một nơ-ron cụ thể nào.', heat: 2 },
+      { id: 'o5', text: 'Tuy nhiên, ở bước suy luận (inference / test), ta không dùng Dropout mà sử dụng toàn bộ mạng.', heat: 2 }
+    ],
+    explanations: {
+      o3: {
+        title: 'Tắt ngẫu nhiên nơ-ron hoạt động như thế nào?',
+        body: 'Mỗi lần lan truyền tiến (forward pass), mỗi nơ-ron có xác suất $p$ bị gán giá trị bằng 0. Cấu trúc mạng vì thế thay đổi liên tục qua từng mini-batch.',
+        example: 'Nếu $p=0.5$, một nửa số nơ-ron bị tắt. Mạng phải cố gắng dự đoán đúng với chỉ một nửa năng lực hiện có.'
+      },
+      o5: {
+        title: 'Tại sao suy luận lại dùng toàn bộ?',
+        body: 'Khi inference, ta muốn dùng toàn bộ sức mạnh tổng hợp của mô hình. Tuy nhiên, do lúc test số lượng nơ-ron hoạt động nhiều hơn so với lúc train, ta phải nhân trọng số với $(1-p)$ để giữ nguyên kỳ vọng.',
+        example: 'Nếu train với $p=0.5$, lúc test phải nhân outputs với $0.5$ (hoặc dùng Inverted Dropout trong lúc train).'
+      }
+    },
+    community: {
+      o3: {
+        questions: [
+          {
+            id: 'q1',
+            author: 'Quang Đại',
+            avatarColor: 'oklch(0.5 0.2 20)',
+            time: '4 giờ trước',
+            upvotes: 52,
+            text: 'Tắt nơ-ron đi thì mô hình có bị mất thông tin quan trọng không?',
+          }
+        ],
+        aiAnswer: {
+          summary: 'Lo ngại về việc Dropout làm mất thông tin hữu ích.',
+          body: 'Mục đích chính của Dropout là buộc các nơ-ron KHÁC phải học cách trích xuất thông tin đó, thay vì chỉ dựa vào 1-2 nơ-ron "siêu sao". Nó phân tán tri thức đều khắp mạng lưới.',
+          steps: ['Ngăn chặn sự đồng thích nghi (co-adaptation).', 'Tạo ra hiệu ứng Ensemble (kết hợp nhiều mạng con).']
+        }
+      },
+      o5: {
+        questions: [
+          {
+            id: 'q2',
+            author: 'Mai Trang',
+            avatarColor: 'oklch(0.7 0.15 340)',
+            time: '1 ngày trước',
+            upvotes: 27,
+            text: 'Vậy là lúc thực tế chạy (test), hàm Dropout bị vô hiệu hoá hoàn toàn à?',
+          }
+        ],
+        aiAnswer: {
+          summary: 'Xác nhận về trạng thái của Dropout lúc Test.',
+          body: 'Đúng vậy! Trong PyTorch chẳng hạn, khi bạn gọi `model.eval()`, cơ chế Dropout sẽ tự động ngưng tắt nơ-ron. Tuy nhiên, nó sẽ có cơ chế bù đắp tỷ lệ (scale) để đảm bảo độ lớn của tín hiệu không bị thay đổi.',
+          steps: ['Lúc Train: Dropout chạy, tắt ngẫu nhiên.', 'Lúc Test: Dropout tắt, mở toàn bộ nơ-ron.', 'Nhân tỷ lệ (Scaling) để cân bằng giá trị.']
+        }
+      }
+    },
+    diagnosticQuiz: {
+      prompt: 'Để bù đắp (scale) tín hiệu lúc Test khi đã dùng Dropout $p=0.5$ lúc Train, ta phải nhân đầu ra của nơ-ron với hệ số bao nhiêu ở quá trình Test (nếu không dùng Inverted Dropout)?',
+      placeholder: 'Nhập số, ví dụ: 0.5',
+      correctAnswers: ['0.5', '0,5', '1/2'],
+      socratic: [
+        {
+          id: 'h1',
+          question: 'Với tỷ lệ loại bỏ $p=0.5$, lúc Train có bao nhiêu % nơ-ron hoạt động?',
+          options: [
+            { id: 'a', label: '100%', correct: false },
+            { id: 'b', label: '50% (hay 0.5)', correct: true }
+          ]
+        },
+        {
+          id: 'h2',
+          question: 'Lúc Test, bao nhiêu % nơ-ron hoạt động?',
+          options: [
+            { id: 'a', label: '100% (hay 1.0)', correct: true },
+            { id: 'b', label: '50%', correct: false, gap: 'Quên nguyên tắc Test của Dropout' }
+          ]
+        },
+        {
+          id: 'h3',
+          question: 'Vì lúc Test số nơ-ron hoạt động GẤP ĐÔI so với kỳ vọng lúc Train, ta phải thu nhỏ kết quả đi bao nhiêu?',
+          options: [
+            { id: 'a', label: 'Nhân 2', correct: false, gap: 'Sai hướng điều chỉnh: phải thu nhỏ chứ không phải phóng to' },
+            { id: 'b', label: 'Nhân 0.5 (chia đôi)', correct: true }
+          ]
+        }
+      ],
+      fullAnswer: 'Trong lúc train với $p=0.5$, chỉ một nửa số nơ-ron đóng góp vào tổng (kỳ vọng là $0.5 \\times \\text{sum}$). Lúc test, vì tất cả cùng bật, tổng sẽ lớn gấp đôi. Do đó, phải nhân các trọng số hoặc kết quả với $(1-p) = 0.5$ để đưa giá trị trở về cùng mức với lúc học.',
+      gapAnalysis: {
+        gap: 'Bạn chưa hiểu cơ chế scaling (bù đắp tín hiệu) của Dropout trong giai đoạn Inference.',
+        improvement: 'Cần phân biệt rõ trạng thái Train (model.train()) và Test (model.eval()). Ở Test, tất cả nơ-ron đều được mở nên tín hiệu tổng sẽ bị đội lên, do đó bắt buộc phải có bước scale.'
+      }
+    }
+  }
 ]
 
 export const optionMeta = {

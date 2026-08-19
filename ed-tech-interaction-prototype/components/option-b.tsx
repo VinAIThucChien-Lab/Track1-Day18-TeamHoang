@@ -23,15 +23,28 @@ export function OptionB({
   currentIndex: number
   totalSlides: number 
 }) {
-  const totalAskers = slide.communityQuestions.reduce((n, q) => n + q.upvotes, 0)
   const containerRef = useRef<HTMLDivElement>(null)
   const [showHeatmap, setShowHeatmap] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
   const [popup, setPopup] = useState<{ x: number; y: number } | null>(null)
   
-  const [localQuestions, setLocalQuestions] = useState(slide.communityQuestions)
+  const [activeSegmentId, setActiveSegmentId] = useState<string | null>(null)
+  const [userQuestions, setUserQuestions] = useState<Record<string, any[]>>({})
   const [isComposing, setIsComposing] = useState(false)
   const [questionText, setQuestionText] = useState('')
+
+  // Default segment to show in the bottom button
+  const defaultSegmentId = slide.segments.find(s => slide.community && slide.community[s.id])?.id
+  const activeCommunityData = (activeSegmentId && slide.community) ? slide.community[activeSegmentId] : null
+  const baseQuestions = activeCommunityData ? activeCommunityData.questions : []
+  const localQuestions = [...(userQuestions[activeSegmentId || ''] || []), ...baseQuestions]
+  const aiAnswer = activeCommunityData ? activeCommunityData.aiAnswer : null
+
+  // Calculate total askers for the default segment
+  const defaultCommunityData = (defaultSegmentId && slide.community) ? slide.community[defaultSegmentId] : null
+  const defaultBaseQuestions = defaultCommunityData ? defaultCommunityData.questions : []
+  const defaultLocalQuestions = [...(userQuestions[defaultSegmentId || ''] || []), ...defaultBaseQuestions]
+  const defaultTotalAskers = defaultBaseQuestions.reduce((n, q) => n + q.upvotes, 0)
 
   const handleMouseUp = useCallback(() => {
     const sel = window.getSelection()
@@ -69,6 +82,9 @@ export function OptionB({
   const handleAskQuestion = () => {
     setPopup(null)
     window.getSelection()?.removeAllRanges()
+    // Nếu có đoạn bôi đen, cho phép hỏi chung vào default segment hoặc một segment 'custom'. 
+    // Ở đây ta gán vào defaultSegmentId tạm thời để mượn modal.
+    setActiveSegmentId(defaultSegmentId || slide.segments[0].id)
     setModalOpen(true)
     setIsComposing(true)
   }
@@ -107,13 +123,19 @@ export function OptionB({
           className="space-y-3 text-lg leading-relaxed text-foreground [&::selection]:bg-primary/25"
         >
           {slide.segments.map((seg) => {
-            const hot = showHeatmap && seg.heat >= 2
+            const hasCommunity = slide.community && !!slide.community[seg.id]
+            const hot = showHeatmap && hasCommunity
             return (
               <p key={seg.id}>
                 <span
-                  onClick={() => hot && setModalOpen(true)}
+                  onClick={() => {
+                    if (hot) {
+                      setActiveSegmentId(seg.id)
+                      setModalOpen(true)
+                    }
+                  }}
                   className={`rounded px-0.5 transition-colors duration-500 ${
-                    showHeatmap ? heatClasses[seg.heat] : ''
+                    showHeatmap && seg.heat > 0 ? heatClasses[seg.heat] : ''
                   } ${hot ? 'cursor-pointer underline decoration-white/50 decoration-dotted underline-offset-4' : ''}`}
                 >
                   <MathText>{seg.text}</MathText>
@@ -123,18 +145,21 @@ export function OptionB({
           })}
         </div>
 
-        {/* Nhóm avatar báo hiệu cộng đồng cũng thắc mắc */}
+        {/* Nhóm avatar báo hiệu cộng đồng cũng thắc mắc (chỉ hiện cho default segment) */}
         <AnimatePresence>
-          {showHeatmap && (
+          {showHeatmap && defaultSegmentId && defaultCommunityData && (
             <motion.button
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 8 }}
-              onClick={() => setModalOpen(true)}
+              onClick={() => {
+                setActiveSegmentId(defaultSegmentId)
+                setModalOpen(true)
+              }}
               className="mt-6 flex w-full items-center gap-3 rounded-xl border border-primary/30 bg-primary/5 p-3 text-left transition-colors hover:bg-primary/10"
             >
               <div className="flex -space-x-2">
-                {localQuestions.slice(0, 3).map((q) => (
+                {defaultLocalQuestions.slice(0, 3).map((q) => (
                   <span
                     key={q.id}
                     className="flex size-8 items-center justify-center rounded-full border-2 border-card text-xs font-bold text-white"
@@ -144,11 +169,11 @@ export function OptionB({
                   </span>
                 ))}
                 <span className="flex size-8 items-center justify-center rounded-full border-2 border-card bg-foreground text-[10px] font-bold text-background">
-                  +{totalAskers + (localQuestions.length - slide.communityQuestions.length)}
+                  +{defaultTotalAskers + (userQuestions[defaultSegmentId]?.length || 0)}
                 </span>
               </div>
               <span className="flex-1 text-sm font-medium text-primary">
-                {totalAskers + (localQuestions.length - slide.communityQuestions.length)} bạn học viên khác cũng thắc mắc ở đây
+                {defaultTotalAskers + (userQuestions[defaultSegmentId]?.length || 0)} bạn học viên khác cũng thắc mắc ở đây
               </span>
               <Users className="size-4 text-primary/80" />
             </motion.button>
@@ -231,14 +256,21 @@ export function OptionB({
                     <button
                       onClick={() => {
                         if (!questionText.trim()) return
-                        setLocalQuestions([{
+                        
+                        const newQ = {
                           id: Date.now().toString(),
                           author: 'Bạn',
                           avatarColor: 'var(--primary)',
                           time: 'Vừa xong',
                           upvotes: 1,
                           text: questionText,
-                        }, ...localQuestions])
+                        }
+                        const segId = activeSegmentId || defaultSegmentId || slide.segments[0].id
+                        setUserQuestions(prev => ({
+                          ...prev,
+                          [segId]: [newQ, ...(prev[segId] || [])]
+                        }))
+                        
                         setQuestionText('')
                         setIsComposing(false)
                       }}
@@ -257,86 +289,94 @@ export function OptionB({
               ) : (
                 <>
                   <div className="px-5 py-4">
-                <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Câu hỏi gốc từ bạn học
-                </p>
-                <div className="space-y-3">
-                  {localQuestions.map((q) => (
-                    <div
-                      key={q.id}
-                      className="rounded-xl border border-border bg-secondary/40 p-3"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="flex size-6 items-center justify-center rounded-full text-[11px] font-bold text-white"
-                          style={{ background: q.avatarColor }}
-                        >
-                          {q.author.charAt(0)}
-                        </span>
-                        <span className="text-sm font-semibold">{q.author}</span>
-                        <span className="text-xs text-muted-foreground">
-                          · {q.time}
-                        </span>
-                        <span className="ml-auto flex items-center gap-1 text-xs font-medium text-muted-foreground">
-                          <ArrowUp className="size-3" />
-                          {q.upvotes}
-                        </span>
+                    {localQuestions.length > 0 ? (
+                      <>
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          Câu hỏi gốc từ bạn học
+                        </p>
+                        <div className="space-y-3">
+                          {localQuestions.map((q) => (
+                            <div
+                              key={q.id}
+                              className="rounded-xl border border-border bg-secondary/40 p-3"
+                            >
+                              <div className="flex items-center gap-2">
+                                <span
+                                  className="flex size-6 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                                  style={{ background: q.avatarColor }}
+                                >
+                                  {q.author.charAt(0)}
+                                </span>
+                                <span className="text-sm font-semibold">{q.author}</span>
+                                <span className="text-xs text-muted-foreground">
+                                  · {q.time}
+                                </span>
+                                <span className="ml-auto flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                                  <ArrowUp className="size-3" />
+                                  {q.upvotes}
+                                </span>
+                              </div>
+                              <p className="mt-2 text-sm leading-relaxed text-foreground">
+                                {q.text}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Chưa có câu hỏi nào ở phần này. Hãy là người đầu tiên đặt câu hỏi!</p>
+                    )}
+
+                    {/* AI tổng hợp */}
+                    {aiAnswer && (
+                      <div className="mt-5 rounded-xl border border-primary/25 bg-accent p-4">
+                        <div className="mb-2 flex items-center gap-2">
+                          <span className="flex size-6 items-center justify-center rounded-full bg-primary/20 text-primary">
+                            <Sparkles className="size-3.5" />
+                          </span>
+                          <span className="text-xs font-semibold uppercase tracking-wide text-primary">
+                            AI tổng hợp · Dựa trên thắc mắc của lớp
+                          </span>
+                        </div>
+                        <p className="text-sm font-medium leading-relaxed text-accent-foreground">
+                          {aiAnswer.summary}
+                        </p>
+                        <p className="mt-2 text-sm leading-relaxed text-accent-foreground">
+                          <MathText>{aiAnswer.body}</MathText>
+                        </p>
+                        <ol className="mt-3 space-y-1.5">
+                          {aiAnswer.steps.map((s, i) => (
+                            <li
+                              key={i}
+                              className="flex gap-2 rounded-lg bg-card/70 px-3 py-2 font-mono text-xs text-foreground"
+                            >
+                              <span className="font-bold text-primary">{i + 1}.</span>
+                              <MathText>{s}</MathText>
+                            </li>
+                          ))}
+                        </ol>
                       </div>
-                      <p className="mt-2 text-sm leading-relaxed text-foreground">
-                        {q.text}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* AI tổng hợp */}
-                <div className="mt-5 rounded-xl border border-primary/25 bg-accent p-4">
-                  <div className="mb-2 flex items-center gap-2">
-                    <span className="flex size-6 items-center justify-center rounded-full bg-primary/20 text-primary">
-                      <Sparkles className="size-3.5" />
-                    </span>
-                    <span className="text-xs font-semibold uppercase tracking-wide text-primary">
-                      AI tổng hợp · Dựa trên thắc mắc của lớp
-                    </span>
+                    )}
                   </div>
-                  <p className="text-sm font-medium leading-relaxed text-accent-foreground">
-                    {slide.communityAiAnswer.summary}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-accent-foreground">
-                    <MathText>{slide.communityAiAnswer.body}</MathText>
-                  </p>
-                  <ol className="mt-3 space-y-1.5">
-                    {slide.communityAiAnswer.steps.map((s, i) => (
-                      <li
-                        key={i}
-                        className="flex gap-2 rounded-lg bg-card/70 px-3 py-2 font-mono text-xs text-foreground"
-                      >
-                        <span className="font-bold text-primary">{i + 1}.</span>
-                        <MathText>{s}</MathText>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </div>
 
-              <div className="sticky bottom-0 flex flex-col gap-2 border-t border-border bg-card px-5 py-4 sm:flex-row">
-                <button
-                  onClick={() => setModalOpen(false)}
-                  className="flex-1 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02]"
-                >
-                  Đã hiểu, đóng lại
-                </button>
-                <button
-                  onClick={() => setIsComposing(true)}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary"
-                >
-                  <MessageSquarePlus className="size-4" />
-                  Tạo câu hỏi mới của riêng tôi
-                </button>
-              </div>
-            </>
-          )}
-        </motion.div>
+                  <div className="sticky bottom-0 flex flex-col gap-2 border-t border-border bg-card px-5 py-4 sm:flex-row">
+                    <button
+                      onClick={() => setModalOpen(false)}
+                      className="flex-1 rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02]"
+                    >
+                      Đã hiểu, đóng lại
+                    </button>
+                    <button
+                      onClick={() => setIsComposing(true)}
+                      className="flex flex-1 items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-2.5 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary"
+                    >
+                      <MessageSquarePlus className="size-4" />
+                      Tạo câu hỏi mới của riêng tôi
+                    </button>
+                  </div>
+                </>
+              )}
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
