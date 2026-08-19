@@ -176,13 +176,21 @@ export function OptionC({
                           <XIcon className="size-4 shrink-0" />
                           Chưa đúng. Đừng lo — hãy để AI dẫn bạn đi từng bước.
                         </p>
-                        <button
-                          onClick={startSocratic}
-                          className="ml-auto flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:scale-105"
-                        >
-                          <Sparkles className="size-4" />
-                          Gợi ý từng bước
-                        </button>
+                        <div className="ml-auto flex items-center gap-3">
+                          <button
+                            onClick={showFullAnswer}
+                            className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                          >
+                            Bỏ qua
+                          </button>
+                          <button
+                            onClick={startSocratic}
+                            className="flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:scale-105"
+                          >
+                            <Sparkles className="size-4" />
+                            Gợi ý từng bước
+                          </button>
+                        </div>
                       </div>
                     </motion.div>
                   )}
@@ -200,19 +208,27 @@ export function OptionC({
                 transition={{ duration: 0.25 }}
               >
                 {/* Progress bar */}
-                <div className="mb-4 flex gap-1.5">
-                  {steps.map((_, i) => (
-                    <span
-                      key={i}
-                      className={`h-1.5 flex-1 rounded-full transition-colors ${
-                        i < step
-                          ? 'bg-primary'
-                          : i === step
-                            ? 'bg-primary/50'
-                            : 'bg-border'
-                      }`}
-                    />
-                  ))}
+                <div className="mb-4 flex items-center gap-4">
+                  <div className="flex flex-1 gap-1.5">
+                    {steps.map((_, i) => (
+                      <span
+                        key={i}
+                        className={`h-1.5 flex-1 rounded-full transition-colors ${
+                          i < step
+                            ? 'bg-primary'
+                            : i === step
+                              ? 'bg-primary/50'
+                              : 'bg-border'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    onClick={showFullAnswer}
+                    className="shrink-0 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    Bỏ qua
+                  </button>
                 </div>
 
                 <p className="flex items-start gap-2 text-pretty text-base font-medium leading-relaxed text-foreground">
