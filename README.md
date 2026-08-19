@@ -54,16 +54,6 @@
 * **Link Prototype chung:** [prototype-link.md](./prototype-link.md)
 * **Bảng so sánh cơ chế:** [three-option-design-sheet.md](./three-option-design-sheet.md)
 
----
-
-## 4. Đóng góp của tôi trong nhóm
-*(Ghi cụ thể phần việc cá nhân: Option phụ trách, thiết kế Human-AI, dựng prototype, facilitate tester nào, tổng hợp feedback)*
-
-* **Option phụ trách chính:** ...
-* **Đóng góp khác:** ...
-
----
-
 ## 5. Prototype Feedback & Group Synthesis
 *(Sẽ cập nhật sau khi hoàn thành test 3 người ở Chặng 5 & 6)*
 
